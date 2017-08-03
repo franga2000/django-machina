@@ -5,12 +5,12 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 from machina.core.db.models import get_model
+from machina.conf import settings as machina_settings
 from machina.models.fields import MarkupTextField
 from machina.models.fields import MarkupTextFieldWidget
 
 
 ForumProfile = get_model('forum_member', 'ForumProfile')
-
 
 class ForumProfileAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'posts_count', )
@@ -18,6 +18,11 @@ class ForumProfileAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'user', )
     raw_id_fields = ('user', )
     search_fields = ('user__username',)
+
+    def __init__(self, *args, **kwargs):
+        super(ForumProfileAdmin, self).__init__(*args, **kwargs)
+        if not machina_settings.PROFILE_AVATARS_ENABLED:
+            self.exclude = ('avatar',)
 
     formfield_overrides = {
         MarkupTextField: {'widget': MarkupTextFieldWidget},
