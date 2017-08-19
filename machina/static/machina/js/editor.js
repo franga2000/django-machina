@@ -6,7 +6,7 @@ MachinaMarkdownEditor = (function() {
   };
 
   var createEditor = function(el) {
-    new SimpleMDE({
+    return new SimpleMDE({
       element: el,
       hideIcons: ['preview', 'guide', 'side-by-side', 'fullscreen', ],
       renderingConfig: {
@@ -19,13 +19,16 @@ MachinaMarkdownEditor = (function() {
   var init = function() {
     elements = document.getElementsByTagName("textarea");
     for (var i = 0; i < elements.length; ++i){
-      if (isMarkdownTextarea(elements[i])) {
-        createEditor(elements[i]);
+      var el = elements[i];
+      if (isMarkdownTextarea(el)) {
+        var editor = createEditor(el);
+        if (el.id) MachinaMarkdownEditor.editors[el.id] = editor;
       }
     }
   };
 
   return {
+    editors: {},
     init: function() {
       return init();
     },
