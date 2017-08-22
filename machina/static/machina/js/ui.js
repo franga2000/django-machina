@@ -49,6 +49,56 @@ var machina = (function(m, $) {
     }
   };
 
+  function find_post(el) {
+      var path = $(el).parents('.post-review .post-content');
+      if (path.length != 0)
+        return path[0];
+      else
+        return false;
+  }
+
+  m.quote = {
+    init: function(quote_menu_selector, quote_button_selector, quote_hint_selector) {
+      if(document.getSelection === undefined) return;
+
+      if(typeof(quote_menu_selector) === 'undefined') quote_menu_selector = '.quote-menu';
+      if(typeof(quote_button_selector) === 'undefined') quote_button_selector = '#quote-button';
+      if(typeof(quote_hint_selector) === 'undefined') quote_hint_selector = '#quote-hint';
+
+      $(quote_button_selector).hide();
+      $(quote_menu_selector).removeClass('hidden');
+
+      $(document).on('selectstart selectionchange', function(ev) {
+        var selection = document.getSelection();
+        if (selection != '' && find_post(selection.anchorNode) && find_post(selection.focusNode)) {
+          $(quote_hint_selector).hide();
+          $(quote_button_selector).show();
+        } else {
+          $(quote_button_selector).hide();
+          $(quote_hint_selector).show();
+        }
+      });
+
+      $(quote_button_selector).click(function(ev) {
+        m.quote.insert_quote(document.getSelection());
+      });
+    },
+    insert_quote: function(selection) {
+      var editor = MachinaMarkdownEditor.editors["id_content"];
+      if(MachinaMarkdownEditor) {
+        var quote = "\n > *";
+        var byline = $(find_post(selection.anchorNode)).parent().find("p small.text-muted").text().trim();
+        quote += "**" + byline + "**";
+        quote += ": " + selection.toString() + "*\n\n";
+
+        var text = editor.value();
+        editor.value(text + quote);
+      } else {
+        Console.error("You have to implement `machina.quote.insert_quote(Selection)` when using a custom editor!")
+      }
+    }
+  };
+
   m.init = function() {
   };
 

@@ -55,6 +55,11 @@
 }
 
 .topic-review{
+  .panel-heading{
+    .quote-menu{
+      float: right;
+    }
+  }
   .panel-body{
     max-height: 300px;
     overflow-y: scroll;
@@ -64,9 +69,14 @@
       border-bottom: 3px solid @gray-lighter;
 
       .post-content-wrapper{
-          h4.subject{
-            margin: 0;
-          }
+        h4.subject{
+          margin: 0;
+        }
+
+        blockquote{
+          font-size: inherit;
+          color: @gray;
+        }
 
         .attachments{
           .attachments-title{
