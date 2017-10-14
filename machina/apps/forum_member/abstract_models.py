@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -36,6 +37,9 @@ class AbstractForumProfile(models.Model):
 
     # The amount of posts the user has posted (only approved posts are considered here).
     posts_count = models.PositiveIntegerField(verbose_name=_('Total posts'), blank=True, default=0)
+
+    def get_absolute_url(self):
+        return reverse('forum_member:profile', kwargs={'pk': self.user_id})
 
     class Meta:
         abstract = True

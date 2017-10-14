@@ -46,8 +46,7 @@
                                             <div>
                                                 <div class="post-created">
                                                   {% if post.poster %}
-                                                    {% url 'forum_member:profile' post.poster_id as poster_url %}
-                                                    {% blocktrans trimmed with poster_url=poster_url username=post.poster.username creation_date=post.created %}
+                                                    {% blocktrans trimmed with poster_url=post.poster.forum_profile.get_absolute_url username=post.poster.username creation_date=post.created %}
                                                       By: <a href="{{ poster_url }}">{{ username }}</a> on {{ creation_date }}
                                                     {% endblocktrans %}
                                                   {% else %}
@@ -65,11 +64,11 @@
                                 {% if post.is_topic_head %}
                                     <span class="label label-default">{% trans "New topic" %}</span>
                                 {% else %}
-                                    <a href="{% url 'forum_conversation:topic' forum_slug=post.topic.forum.slug forum_pk=post.topic.forum.pk slug=post.topic.slug pk=post.topic.pk %}" class="post-name-link">{{ post.topic.subject }}</a>
+                                    <a href="{{ post.topic.get_absolute_url }}" class="post-name-link">{{ post.topic.subject }}</a>
                                 {% endif %}
                             </div>
                             <div class="hidden-xs col-md-2 forum-name">
-                                <a href="{% url 'forum:forum' slug=post.topic.forum.slug pk=post.topic.forum.pk %}" class="post-name-link">{{ post.topic.forum.name }}</a>
+                                <a href="{{ form.get_absolute_url }}" class="post-name-link">{{ post.topic.forum.name }}</a>
                             </div>
                         </div>
                     {% empty %}

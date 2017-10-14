@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
 from django.utils.encoding import force_text
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -120,6 +121,9 @@ class AbstractForum(MPTTModel, DatedModel):
         Returns True if the forum is a link.
         """
         return self.type == self.FORUM_LINK
+
+    def get_absolute_url(self):
+        return reverse('forum:forum', kwargs={'slug': self.slug, 'pk': self.pk})
 
     def clean(self):
         super(AbstractForum, self).clean()

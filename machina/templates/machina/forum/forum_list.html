@@ -14,7 +14,7 @@
       <div class="panel-heading">
         <div class="row panel-row">
           <div class="col-md-8 col-sm-9 col-xs-12 forum-name-col">
-            <h3 class="panel-title"><a href="{% url 'forum:forum' node.obj.slug node.obj.id %}" class="brand">{{ node.obj.name }}</a></h3>
+            <h3 class="panel-title"><a href="{{ node.obj.get_absolute_url }}" class="brand">{{ node.obj.name }}</a></h3>
           </div>
           <div class="col-md-1 forum-count-col hidden-sm hidden-xs">{% trans "Topics" %}</div>
           <div class="col-md-1 forum-count-col hidden-sm hidden-xs">{% trans "Posts" %}</div>
@@ -59,7 +59,7 @@
             </td>
             {% endif %}
             <td>
-              <a href="{% url 'forum:forum' node.obj.slug node.obj.id %}" class="forum-name-link">{{ node.obj.name }}</a>
+              <a href="{{ node.obj.get_absolute_url }}" class="forum-name-link">{{ node.obj.name }}</a>
               <div class="forum-description">{{ node.obj.description.rendered }}</div>
               <div class="sub-forums">{{ children }}</div>
             </td>
@@ -72,8 +72,7 @@
       <div class="col-md-2 col-sm-3 hidden-xs forum-last-post">
         {% if node.last_post %}
         {% if node.last_post.poster %}
-        {% url 'forum_member:profile' node.last_post.poster_id as poster_url %}
-        {% blocktrans trimmed with poster_url=poster_url username=node.last_post.poster.username %}
+        {% blocktrans trimmed with poster_url=node.last_post.forum_profile.get_absolute_url username=node.last_post.poster.username %}
         By: <a href="{{ poster_url }}">{{ username }}</a>
         {% endblocktrans %}
         {% else %}
@@ -81,7 +80,7 @@
         By: {{ poster_username }}
         {% endblocktrans %}
         {% endif %}
-        &nbsp;<a href="{% url 'forum_conversation:topic' node.obj.slug node.obj.pk node.last_post.topic.slug node.last_post.topic.pk %}?post={{ node.last_post.pk }}#{{ node.last_post.pk }}"><i class="fa fa-arrow-circle-o-right "></i></a>
+        &nbsp;<a href="{{ node.last_post.get_absolute_url }}"><i class="fa fa-arrow-circle-o-right "></i></a>
         <br />
         {{ node.last_post.created }}
         {% else %}
@@ -94,7 +93,7 @@
           <tr>
             <td class="forum-icon link"><i class="fa fa-link fa-2x"></i></td>
             <td>
-              <a href="{% url 'forum:forum' node.obj.slug node.obj.id %}" class="forum-name-link">{{ node.obj.name }}</a>
+              <a href="{{ node.obj.get_absolute_url }}" class="forum-name-link">{{ node.obj.name }}</a>
               <div class="forum-description">{{ node.obj.description.rendered }}</div>
             </td>
           </tr>
@@ -132,7 +131,7 @@
             </td>
             {% endif %}
             <td>
-              <a href="{% url 'forum:forum' node.obj.slug node.obj.id %}" class="forum-name-link">{{ node.obj.name }}</a>
+              <a href="{{ node.obj.get_absolute_url }}" class="forum-name-link">{{ node.obj.name }}</a>
               <div class="forum-description">{{ node.obj.description.rendered }}</div>
               <div class="sub-forums">{{ children }}</div>
             </td>
@@ -145,8 +144,7 @@
       <div class="col-md-2 col-sm-3 hidden-xs forum-last-post">
         {% if node.last_post %}
         {% if node.last_post.poster_id %}
-        {% url 'forum_member:profile' node.last_post.poster_id as poster_url %}
-        {% blocktrans trimmed with poster_url=poster_url username=node.last_post.poster.username %}
+        {% blocktrans trimmed with poster_url=node.last_post.poster.get_absolute_url username=node.last_post.poster.username %}
         By: <a href="{{ poster_url }}">{{ username }}</a>
         {% endblocktrans %}
         {% else %}
@@ -154,7 +152,7 @@
         By: {{ poster_username }}
         {% endblocktrans %}
         {% endif %}
-        &nbsp;<a href="{% url 'forum_conversation:topic' node.obj.slug node.obj.pk node.last_post.topic.slug node.last_post.topic.pk %}?post={{ node.last_post.pk }}#{{ node.last_post.pk }}"><i class="fa fa-arrow-circle-o-right "></i></a>
+        &nbsp;<a href="{{ node.last_post.get_absolute_url }}"><i class="fa fa-arrow-circle-o-right "></i></a>
         <br />
         {{ node.last_post.created }}
         {% else %}
@@ -167,7 +165,7 @@
           <tr>
             <td class="forum-icon link"><i class="fa fa-link fa-2x"></i></td>
             <td>
-              <a href="{% url 'forum:forum' node.obj.slug node.obj.id %}" class="forum-name-link">{{ node.obj.name }}</a>
+              <a href="{{ node.obj.get_absolute_url }}" class="forum-name-link">{{ node.obj.name }}</a>
               <div class="forum-description">{{ node.obj.description.rendered }}</div>
             </td>
           </tr>
@@ -186,13 +184,13 @@
     {% if not node.previous_sibling %}
     <b>{% trans "Subforums:" %}</b>&nbsp;
     {% endif %}
-    <i class="fa fa-file"></i>&nbsp;<a href="{% url 'forum:forum' node.obj.slug node.obj.id %}">{{ node.obj.name }}</a>&nbsp;&nbsp;
+    <i class="fa fa-file"></i>&nbsp;<a href="{{ node.obj.get_absolute_url }}">{{ node.obj.name }}</a>&nbsp;&nbsp;
     {% endif %}
     {% elif node.level == root_level_sub %}
     {% if not node.previous_sibling %}
     <b>{% trans "Subforums:" %}</b>&nbsp;
     {% endif %}
-    <i class="fa fa-file"></i>&nbsp;<a href="{% url 'forum:forum' node.obj.slug node.obj.id %}">{{ node.obj.name }}</a>&nbsp;&nbsp;
+    <i class="fa fa-file"></i>&nbsp;<a href="{{ node.obj.get_absolute_url }}">{{ node.obj.name }}</a>&nbsp;&nbsp;
     {% endif %}
     {% endrecurseforumcontents %}
     {% else %}

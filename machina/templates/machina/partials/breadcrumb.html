@@ -4,11 +4,11 @@
     <li><a href="{% url 'forum:index' %}"><i class="fa fa-home">&nbsp;</i>{% trans "Forum index" %}</a></li>
     {% if forum %}
         {% for ancestor in forum.get_ancestors %}
-            <li><a href="{% url 'forum:forum' ancestor.slug ancestor.id %}">{{ ancestor.name }}</a></li>
+            <li><a href="{{ ancestor.get_absolute_url }}">{{ ancestor.name }}</a></li>
         {% endfor %}
-        <li><a href="{% url 'forum:forum' forum.slug forum.id %}">{{ forum.name }}</a></li>
+        <li><a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a></li>
     {% endif %}
     {% if topic %}
-        <li><a href="{% url 'forum_conversation:topic' forum.slug forum.id topic.slug topic.id %}">{{ topic.subject }}</a></li>
+        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
     {% endif %}
 </ul>

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.utils.encoding import force_text
@@ -135,6 +136,9 @@ class AbstractTopic(DatedModel):
         if not hasattr(self, '_subscribers'):
             self._subscribers = list(self.subscribers.all())
         return user in self._subscribers
+
+    def get_absolute_url(self):
+        return reverse('forum_conversation:topic', args=(self.forum.slug, self.forum.pk, self.slug, self.pk))
 
     def clean(self):
         super(AbstractTopic, self).clean()
@@ -284,6 +288,9 @@ class AbstractPost(DatedModel):
         """
         position = self.topic.posts.filter(Q(created__lt=self.created) | Q(id=self.id)).count()
         return position
+
+    def get_absolute_url(self):
+        return "%s?post=%d#%d" % (self.topic.get_absolute_url(), self.pk, self.pk)
 
     def clean(self):
         super(AbstractPost, self).clean()
