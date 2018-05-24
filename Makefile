@@ -1,4 +1,8 @@
-.PHONY: install upgrade qa lint tests spec coverage travis docs
+.PHONY: init install qa lint tests spec coverage travis docs
+
+
+init:
+	pipenv install --three --dev
 
 
 # DEVELOPMENT
@@ -13,25 +17,15 @@ staticfiles:
 
 # Generate the project's .po files.
 messages:
-	cd machina && django-admin.py makemessages -a
+	cd machina && pipenv run python -m django makemessages -a
 
 # Compiles the project's .po files.
 compiledmessages:
-	cd machina && django-admin.py compilemessages
-
-# Installs all the project's dependencies.
-install:
-	pip install -r requirements-dev.txt
-	pip install -e .
-
-# Upgrade all the project's dependencies.
-upgrade:
-	pip install -r requirements-dev.txt -U
-	pip install -e . -U
+	cd machina && pipenv run python -m django compilemessages
 
 # Builds the documentation.
 docs:
-	cd docs && rm -rf _build && make html
+	cd docs && rm -rf _build && pipenv run make html
 
 
 # QUALITY ASSURANCE
@@ -43,11 +37,11 @@ qa: lint isort
 
 # Code quality checks (eg. flake8, eslint, etc).
 lint:
-	flake8
+	pipenv run flake8
 
 # Import sort checks.
 isort:
-	isort --check-only --recursive --diff machina tests
+	pipenv run isort --check-only --recursive --diff machina tests
 
 
 # TESTING
@@ -57,22 +51,12 @@ isort:
 
 # Just runs all the tests!
 tests:
-	py.test
+	pipenv run py.test
 
 # Collects code coverage data.
 coverage:
-	py.test --cov-report term-missing --cov machina
+	pipenv run py.test --cov-report term-missing --cov machina
 
 # Run the tests in "spec" mode.
 spec:
-	py.test --spec -p no:sugar
-
-
-# CONTINUOUS INTEGRATION
-# ~~~~~~~~~~~~~~~~~~~~~~
-# The following rules can be used to trigger operations that should be performed only in continuous
-# integration environments.
-# --------------------------------------------------------------------------------------------------
-
-# Performs operations required to build & test the project on Travis CI.
-travis: install qa coverage
+	pipenv run py.test --spec -p no:sugar
